@@ -1,0 +1,244 @@
+/* Almanac of Imaginary Weather — a well-kept, unreliable field journal. */
+:root {
+  color-scheme: light dark;
+  --background: #F6F0E2;
+  --surface: #FFFAEF;
+  --ink: #263D42;
+  --accent: #945039;
+  --highlight: #D8B95F;
+  --line: rgba(38, 61, 66, .2);
+  --contour: rgba(38, 61, 66, .055);
+  --serif: Georgia, 'Times New Roman', serif;
+  --controls: 'Trebuchet MS', Arial, sans-serif;
+  --notation: 'Courier New', Courier, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { min-width: 280px; }
+
+body {
+  margin: 0;
+  padding: clamp(1.25rem, 5vw, 4.5rem);
+  color: var(--ink);
+  background-color: var(--background);
+  background-image:
+    repeating-radial-gradient(ellipse at -12% 28%, transparent 0 29px, var(--contour) 30px 31px, transparent 32px 53px),
+    repeating-radial-gradient(ellipse at 115% 92%, transparent 0 43px, var(--contour) 44px 45px, transparent 46px 76px);
+  font: 1rem/1.65 var(--serif);
+  overflow-wrap: break-word;
+}
+
+header, main, footer {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+header {
+  position: relative;
+  padding-block: 1rem 2.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+header::before {
+  content: 'FIELD NOTES / ATMOSPHERIC OBSERVATIONS';
+  display: block;
+  margin-bottom: 1.5rem;
+  color: var(--accent);
+  font: .7rem/1.6 var(--notation);
+  letter-spacing: .16em;
+}
+
+#title {
+  max-width: 17ch;
+  margin: 0;
+  font: normal clamp(2.6rem, 6.5vw, 5.8rem)/1.04 var(--serif);
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+#tagline {
+  margin: 1.25rem 0 0;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-style: italic;
+}
+
+main { padding-block: 2rem; }
+
+#today-card {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 72rem;
+  margin: 2rem auto;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 2px 2px 1.5rem 2px;
+  background: var(--surface);
+  box-shadow: 0 6px 0 -3px var(--background), 0 7px 0 -3px var(--line);
+}
+
+#today-card h2, #today-card h3, #today-card .name {
+  margin: .5rem 0 1.5rem;
+  color: var(--accent);
+  font: normal .8rem/1.5 var(--notation);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+#today-card p {
+  max-width: 29ch;
+  margin: 1rem 0;
+  font: normal clamp(1.75rem, 4.2vw, 3.75rem)/1.22 var(--serif);
+  letter-spacing: -.025em;
+  text-wrap: pretty;
+}
+
+#today-card p:last-child:not(:first-of-type), #today-card small {
+  display: block;
+  max-width: 65ch;
+  margin-top: 1.75rem;
+  font: 1rem/1.65 var(--serif);
+  letter-spacing: normal;
+  font-style: italic;
+}
+
+.icon {
+  display: inline-block;
+  color: var(--highlight);
+  font-size: 1.8rem;
+  line-height: 1.4;
+}
+
+#today-card > .icon { font-size: 2.6rem; }
+
+time, .day {
+  font-family: var(--notation);
+  font-size: .75rem;
+  letter-spacing: .035em;
+}
+
+label {
+  display: inline-block;
+  margin: .5rem .75rem .5rem 0;
+  font: .85rem/1.5 var(--controls);
+}
+
+select, button {
+  min-height: 3rem;
+  max-width: 100%;
+  margin: .5rem .5rem .5rem 0;
+  padding: .7rem 1.1rem;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  font: 1rem/1.4 var(--controls);
+  cursor: pointer;
+}
+
+select { color: var(--ink); background-color: var(--surface); }
+button { color: var(--surface); background: var(--accent); }
+button:hover { filter: brightness(1.12); }
+button:active { filter: brightness(.92); }
+button:disabled { opacity: .55; cursor: wait; }
+select:hover { border-color: var(--ink); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+
+#forecast-list {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  width: 100%;
+  max-width: 72rem;
+  margin: 2.5rem auto 1rem;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+#forecast-list li {
+  min-width: 0;
+  padding: 1.4rem .9rem;
+  border-bottom: 1px solid var(--line);
+}
+
+#forecast-list li + li { border-left: 1px solid var(--line); }
+#forecast-list .day { display: block; margin-bottom: .7rem; }
+#forecast-list .icon { display: block; margin-bottom: .65rem; }
+#forecast-list .name { display: block; font: 1rem/1.4 var(--serif); }
+
+footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  font: .75rem/1.8 var(--notation);
+}
+
+footer a { color: var(--accent); text-underline-offset: .2em; }
+
+/* Punctuation falls on top of the incoming observation, then clears. */
+#today-card.pop > * { animation: forecast-arrives 700ms ease-out both; }
+#today-card.pop::before, #today-card.pop::after {
+  content: ',   ·     ;    ,     ·    ,    ;';
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 auto;
+  padding-inline: 5%;
+  color: var(--accent);
+  font: 1.1rem/2 var(--notation);
+  word-spacing: clamp(.4rem, 3vw, 3rem);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  animation: punctuation-rain 1100ms ease-in both;
+}
+
+#today-card.pop::after {
+  content: '·    ,     :    ·     ;    ,';
+  padding-left: 12%;
+  color: var(--highlight);
+  animation-delay: 140ms;
+  animation-duration: 1250ms;
+}
+
+@keyframes forecast-arrives {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes punctuation-rain {
+  0% { opacity: 0; transform: translateY(-2rem); }
+  15% { opacity: .7; }
+  70% { opacity: .4; }
+  100% { opacity: 0; transform: translate(1rem, 18rem); }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #19282C;
+    --surface: #22363B;
+    --ink: #F3ECD9;
+    --accent: #E6A384;
+    --line: rgba(243, 236, 217, .2);
+    --contour: rgba(243, 236, 217, .045);
+  }
+  button { color: var(--background); }
+}
+
+@media (max-width: 760px) {
+  #forecast-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #forecast-list li + li { border-left: none; }
+  #forecast-list li:nth-child(even) { border-left: 1px solid var(--line); }
+  #forecast-list li:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 420px) {
+  header::before { font-size: .6rem; letter-spacing: .08em; }
+  #mood-select, #generate-btn { display: block; width: 100%; margin: .75rem 0; }
+  #today-card { margin-block: 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #today-card.pop > * { animation: none; }
+  #today-card.pop::before, #today-card.pop::after { display: none; animation: none; }
+}

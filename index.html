@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="An illustrated field journal of imaginary weather, with forecasts for places you almost remember.">
+  <title>Almanac of Imaginary Weather</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./content.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <header>
+    <p>Field journal · Department of unlikely weather</p>
+    <h1 id="title">Almanac of Imaginary Weather</h1>
+    <p id="tagline">Forecasts for places you almost remember.</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="observation-heading">
+      <h2 id="observation-heading">Observation No. 001</h2>
+      <section id="today-card" aria-live="polite" aria-atomic="true" aria-label="Current forecast">
+        <span class="icon" aria-hidden="true">🌦️</span>
+        <h3 class="name">The umbrella hour</h3>
+        <p>A light drizzle of forgotten umbrellas, clearing when someone remembers your name.</p>
+        <p>Leave a little room by the door.</p>
+      </section>
+
+      <div>
+        <label for="mood-select">Choose a mood</label>
+        <select id="mood-select" name="mood">
+          <option value="any">Any mood</option>
+          <option value="wistful">Wistful</option>
+          <option value="delighted">Delighted</option>
+          <option value="dreamy">Dreamy</option>
+          <option value="restless">Restless</option>
+          <option value="mischievous">Mischievous</option>
+        </select>
+        <button id="generate-btn" type="button">Another forecast</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="outlook-heading">
+      <h2 id="outlook-heading">The seven-day outlook</h2>
+      <ul id="forecast-list" aria-label="Seven-day forecast"></ul>
+    </section>
+
+    <noscript>
+      <p>Enable JavaScript to choose a mood, discover another forecast, and read the seven-day outlook.</p>
+    </noscript>
+  </main>
+
+  <footer>
+    <p>Recorded with care. Accuracy remains a matter of atmosphere.</p>
+    <p>For contemplation, not navigation.</p>
+  </footer>
+</body>
+</html>
