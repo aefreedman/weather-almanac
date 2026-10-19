@@ -43,6 +43,7 @@ header {
 
 header::before {
   content: 'FIELD NOTES / ATMOSPHERIC OBSERVATIONS';
+  content: 'FIELD NOTES / ATMOSPHERIC OBSERVATIONS' / '';
   display: block;
   margin-bottom: 1.5rem;
   color: var(--accent);
@@ -80,7 +81,7 @@ main { padding-block: 2rem; }
   box-shadow: 0 6px 0 -3px var(--background), 0 7px 0 -3px var(--line);
 }
 
-#today-card h2, #today-card h3, #today-card .name {
+#today-card .name {
   margin: .5rem 0 1.5rem;
   color: var(--accent);
   font: normal .8rem/1.5 var(--notation);
@@ -88,7 +89,12 @@ main { padding-block: 2rem; }
   text-transform: uppercase;
 }
 
-#today-card p {
+#today-card .day {
+  margin: 0 0 .25rem;
+  color: var(--accent);
+}
+
+#today-card .forecast {
   max-width: 29ch;
   margin: 1rem 0;
   font: normal clamp(1.75rem, 4.2vw, 3.75rem)/1.22 var(--serif);
@@ -96,13 +102,40 @@ main { padding-block: 2rem; }
   text-wrap: pretty;
 }
 
-#today-card p:last-child:not(:first-of-type), #today-card small {
+#today-card .advice, #today-card small {
   display: block;
   max-width: 65ch;
-  margin-top: 1.75rem;
-  font: 1rem/1.65 var(--serif);
+  margin: 1.75rem 0 0;
+  font: italic 1rem/1.65 var(--serif);
   letter-spacing: normal;
-  font-style: italic;
+}
+
+/* The observer's instruments: a ruled ledger of readings. */
+#today-card .readings {
+  max-width: 40rem;
+  margin: 2rem 0 0;
+  border-top: 1px solid var(--line);
+}
+
+#today-card .reading {
+  display: grid;
+  grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+#today-card .reading dt {
+  color: var(--accent);
+  font: .75rem/1.5 var(--notation);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+#today-card .reading dd {
+  margin: 0;
+  font: 1rem/1.5 var(--serif);
 }
 
 .icon {
@@ -178,39 +211,10 @@ footer a { color: var(--accent); text-underline-offset: .2em; }
 
 /* Punctuation falls on top of the incoming observation, then clears. */
 #today-card.pop > * { animation: forecast-arrives 700ms ease-out both; }
-#today-card.pop::before, #today-card.pop::after {
-  content: ',   ·     ;    ,     ·    ,    ;';
-  position: absolute;
-  z-index: 2;
-  inset: 0 0 auto;
-  padding-inline: 5%;
-  color: var(--accent);
-  font: 1.1rem/2 var(--notation);
-  word-spacing: clamp(.4rem, 3vw, 3rem);
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  animation: punctuation-rain 1100ms ease-in both;
-}
-
-#today-card.pop::after {
-  content: '·    ,     :    ·     ;    ,';
-  padding-left: 12%;
-  color: var(--highlight);
-  animation-delay: 140ms;
-  animation-duration: 1250ms;
-}
 
 @keyframes forecast-arrives {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes punctuation-rain {
-  0% { opacity: 0; transform: translateY(-2rem); }
-  15% { opacity: .7; }
-  70% { opacity: .4; }
-  100% { opacity: 0; transform: translate(1rem, 18rem); }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -236,9 +240,9 @@ footer a { color: var(--accent); text-underline-offset: .2em; }
   header::before { font-size: .6rem; letter-spacing: .08em; }
   #mood-select, #generate-btn { display: block; width: 100%; margin: .75rem 0; }
   #today-card { margin-block: 1.5rem; }
+  #today-card .reading { grid-template-columns: minmax(0, 1fr); gap: .1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #today-card.pop > * { animation: none; }
-  #today-card.pop::before, #today-card.pop::after { display: none; animation: none; }
 }

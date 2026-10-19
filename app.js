@@ -13,6 +13,7 @@
       ? data.entries.filter(entry => entry && typeof entry.forecast === "string" && entry.forecast.trim())
       : [];
     const moods = Array.isArray(data.moods) ? data.moods : [];
+    const instruments = validInstruments(data.instruments);
     const motion = typeof window.matchMedia === "function"
       ? window.matchMedia("(prefers-reduced-motion: reduce)")
       : null;
@@ -25,6 +26,41 @@
       node.textContent = typeof text === "string" ? text : "";
       if (className) node.className = className;
       return node;
+    }
+
+    function validInstruments(source) {
+      if (!Array.isArray(source)) return [];
+      const seen = new Set();
+      const valid = [];
+      for (const item of source) {
+        if (valid.length >= 8) break;
+        if (!item || typeof item !== "object") continue;
+        const { id, label } = item;
+        if (typeof id !== "string" || !id.trim() || typeof label !== "string" || !label.trim()) continue;
+        if (seen.has(id)) continue;
+        seen.add(id);
+        valid.push({ id, label: label.trim() });
+      }
+      return valid;
+    }
+
+    function buildLedger(entry) {
+      const readings = entry && entry.readings;
+      if (!readings || typeof readings !== "object" || Array.isArray(readings)) return null;
+      const rows = instruments
+        .filter(instrument => typeof readings[instrument.id] === "string" && readings[instrument.id].trim())
+        .map(instrument => [instrument.label, readings[instrument.id].trim()]);
+      if (!rows.length) return null;
+      const ledger = document.createElement("dl");
+      ledger.className = "readings";
+      ledger.setAttribute("aria-label", "Instrument readings");
+      rows.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "reading";
+        row.append(element("dt", label), element("dd", value));
+        ledger.appendChild(row);
+      });
+      return ledger;
     }
 
     function choose(pool) {
@@ -94,13 +130,13 @@
           pointerEvents: "none",
           fontFamily: "Georgia, serif",
           fontSize: "20px",
-          color: "inherit",
+          color: "var(--accent)",
           zIndex: "10"
         });
         document.body.appendChild(node);
         const animation = node.animate([
           { transform: "translate(0, -12px)", opacity: 0 },
-          { opacity: 0.55, offset: 0.2 },
+          { opacity: 0.45, offset: 0.2 },
           { transform: `translate(${Math.random() * 32 - 16}px, ${Math.min(bounds.height, 180)}px)`, opacity: 0 }
         ], { duration: 850 + Math.random() * 500, delay: index * 25, fill: "both" });
         const mark = { node, animation };
@@ -120,21 +156,27 @@
       const entry = choose(alternatives.length ? alternatives : pool);
       card.classList.remove("pop");
       clearRain();
+      const heading = document.getElementById("observation-heading");
       if (!entry) {
-        card.replaceChildren(element("p", "No observations are available for this mood yet."));
+        if (heading) heading.textContent = "Observation pending";
+        card.replaceChildren(element("p", "No observations are available for this mood yet.", "forecast"));
         return;
       }
       previous = entry;
       observation += 1;
+      if (heading) heading.textContent = `Observation No. ${String(observation).padStart(3, "0")}`;
       const icon = element("span", entry.icon, "icon");
       icon.setAttribute("aria-hidden", "true");
-      card.replaceChildren(
-        element("p", `Observation ${String(observation).padStart(3, "0")} · ${new Date().toLocaleDateString(undefined, { month: "short", day: "numeric" })}`, "day"),
+      const children = [
+        element("p", new Date().toLocaleDateString(undefined, { day: "numeric", month: "short" }), "day"),
         icon,
-        element("h2", entry.name, "name"),
-        element("p", entry.forecast),
-        element("p", entry.advice)
-      );
+        element("h3", entry.name, "name"),
+        element("p", entry.forecast, "forecast")
+      ];
+      const ledger = buildLedger(entry);
+      if (ledger) children.push(ledger);
+      children.push(element("p", entry.advice, "advice"));
+      card.replaceChildren(...children);
       if (animate && !(motion && motion.matches)) {
         // Flush the removed class so consecutive observations animate independently.
         void card.offsetWidth;
@@ -153,11 +195,20 @@
       if (typeof motion.addEventListener === "function") motion.addEventListener("change", onMotionChange);
       else if (typeof motion.addListener === "function") motion.addListener(onMotionChange);
     }
+    // Keyboard arrowing fires change per step; render only the mood the reader settles on.
+    let moodTimer;
     if (button) button.addEventListener("click", event => {
       event.preventDefault();
+      clearTimeout(moodTimer);
       render(true);
     });
+    if (select) select.addEventListener("change", () => {
+      clearTimeout(moodTimer);
+      moodTimer = setTimeout(() => render(true), 350);
+    });
     render(false);
+    // Announce later observations only; the first render on page load stays quiet.
+    if (card) card.setAttribute("aria-live", "polite");
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });

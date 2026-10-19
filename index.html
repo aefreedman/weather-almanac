@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,11 +20,15 @@
   <main>
     <section aria-labelledby="observation-heading">
       <h2 id="observation-heading">Observation No. 001</h2>
-      <section id="today-card" aria-live="polite" aria-atomic="true" aria-label="Current forecast">
+      <section id="today-card" aria-atomic="true" aria-label="Current forecast">
         <span class="icon" aria-hidden="true">🌦️</span>
         <h3 class="name">The umbrella hour</h3>
-        <p>A light drizzle of forgotten umbrellas, clearing when someone remembers your name.</p>
-        <p>Leave a little room by the door.</p>
+        <p class="forecast">A light drizzle of forgotten umbrellas, clearing when someone remembers your name.</p>
+        <dl class="readings" aria-label="Instrument readings">
+          <div class="reading"><dt>Barometer</dt><dd>Falling, then remembering</dd></div>
+          <div class="reading"><dt>Humidity</dt><dd>Two umbrellas’ worth</dd></div>
+        </dl>
+        <p class="advice">Leave a little room by the door.</p>
       </section>
 
       <div>
