@@ -1,7 +1,59 @@
 (() => {
   "use strict";
 
+  // Two families of survey contours behind the journal, matching the original gradient geometry
+  // (centre as a fraction of the page, first ring radius, ring spacing, vertical stretch) but drawn
+  // as vector strokes so they stay crisp and keep their shape on every screen.
+  const CONTOURS = [
+    { cx: -0.12, cy: 0.28, first: 30.5, step: 53, stretch: 1.1 },
+    { cx: 1.15, cy: 0.92, first: 44.5, step: 76, stretch: 1.35 }
+  ];
+
+  function drawContours() {
+    const body = document.body;
+    if (!body || typeof document.createElementNS !== "function") return;
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("class", "contours");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+    const groups = CONTOURS.map(family => svg.appendChild(document.createElementNS(ns, "g")));
+    body.prepend(svg);
+
+    function ringsNeeded(family, width, height) {
+      const x = family.cx * width;
+      const y = family.cy * height;
+      const reach = Math.max(...[[0, 0], [width, 0], [0, height], [width, height]]
+        .map(([cornerX, cornerY]) => Math.hypot(cornerX - x, (cornerY - y) / family.stretch)));
+      return Math.max(0, Math.ceil((reach - family.first) / family.step) + 1);
+    }
+
+    function update() {
+      const width = body.offsetWidth;
+      const height = body.offsetHeight;
+      CONTOURS.forEach((family, index) => {
+        const group = groups[index];
+        const count = ringsNeeded(family, width, height);
+        while (group.childNodes.length < count) {
+          const radius = family.first + family.step * group.childNodes.length;
+          const ring = document.createElementNS(ns, "ellipse");
+          ring.setAttribute("cx", `${family.cx * 100}%`);
+          ring.setAttribute("cy", `${family.cy * 100}%`);
+          ring.setAttribute("rx", radius.toFixed(1));
+          ring.setAttribute("ry", (radius * family.stretch).toFixed(1));
+          group.appendChild(ring);
+        }
+        while (group.childNodes.length > count) group.lastChild.remove();
+      });
+    }
+
+    update();
+    if (typeof ResizeObserver === "function") new ResizeObserver(update).observe(body);
+    else window.addEventListener("resize", update);
+  }
+
   function start() {
+    drawContours();
     const data = window.ALMANAC || {};
     const title = document.getElementById("title");
     const tagline = document.getElementById("tagline");
