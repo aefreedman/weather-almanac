@@ -10,7 +10,8 @@
     const card = document.getElementById("today-card");
     const list = document.getElementById("forecast-list");
     const entries = Array.isArray(data.entries)
-      ? data.entries.filter(entry => entry && typeof entry.forecast === "string" && entry.forecast.trim())
+      ? data.entries.filter(entry => entry && typeof entry.forecast === "string" && entry.forecast.trim()
+          && typeof entry.name === "string" && entry.name.trim())
       : [];
     const moods = Array.isArray(data.moods) ? data.moods : [];
     const instruments = validInstruments(data.instruments);
@@ -159,7 +160,7 @@
       const heading = document.getElementById("observation-heading");
       if (!entry) {
         if (heading) heading.textContent = "Observation pending";
-        card.replaceChildren(element("p", "No observations are available for this mood yet.", "forecast"));
+        card.replaceChildren(element("p", entries.length ? "No observations are available for this mood yet." : "The almanac is still being written.", "forecast"));
         return;
       }
       previous = entry;

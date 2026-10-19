@@ -44,7 +44,7 @@ window.ALMANAC = {
     {
       mood: "wistful",
       name: "Low Pressure at Number Nine",
-      forecast: "Rain is expected in the spare key's teeth, with brief clear spells whenever the old door is mentioned.",
+      forecast: "Rain is expected in the spare key’s teeth, with brief clear spells whenever the old door is mentioned.",
       advice: "Dry the key on a handkerchief, not a calendar.",
       icon: "🔑",
       readings: {
@@ -122,7 +122,7 @@ window.ALMANAC = {
       mood: "dreamy",
       name: "Duvet Archipelago",
       forecast: "Clouds will anchor along the blanket hem, carrying the distant sound of a spoon stirring a very patient sea.",
-      advice: "Mark your pillow's position before drifting.",
+      advice: "Mark your pillow’s position before drifting.",
       icon: "☁️",
       readings: {
         barometer: "Drifting lower, very patient",
@@ -173,7 +173,7 @@ window.ALMANAC = {
     {
       mood: "restless",
       name: "Shoelace Front",
-      forecast: "Crosswinds will pull the laces toward streets not yet walked, with strongest gusts near the word someday.",
+      forecast: "Crosswinds will pull the laces towards streets not yet walked, with strongest gusts near the word someday.",
       advice: "Tie a double knot, then choose a direction.",
       icon: "👟",
       readings: {
@@ -211,7 +211,7 @@ window.ALMANAC = {
     {
       mood: "restless",
       name: "Hallway Trade Winds",
-      forecast: "A warm current will carry the doormat several inches toward the road, encouraged by a sudden lack of convincing excuses.",
+      forecast: "A warm current will carry the doormat several inches towards the road, encouraged by a sudden lack of convincing excuses.",
       advice: "Take the short walk by the long route.",
       icon: "🚪",
       readings: {
